@@ -1,0 +1,117 @@
+{
+  "parameters": {
+    "body": {
+      "rx": 57,
+      "ry": 71.5,
+      "depth": 58,
+      "wall": 2.4,
+      "segments": 160
+    },
+    "window": {
+      "d": 52.5,
+      "x": 0,
+      "y": 27
+    },
+    "sensor": {
+      "d": 10,
+      "x": 0,
+      "y": -21
+    },
+    "boss": {
+      "od": 8,
+      "hole": 4.2,
+      "holeDepth": 6.5,
+      "positions": [
+        [
+          14,
+          58
+        ],
+        [
+          -14,
+          58
+        ],
+        [
+          14,
+          -58
+        ],
+        [
+          -14,
+          -58
+        ]
+      ]
+    },
+    "plate": {
+      "thickness": 5,
+      "screwHole": 3.4,
+      "countersinkD": 6.6
+    },
+    "dovetail": {
+      "depth": 12,
+      "neck": 10,
+      "end": 15,
+      "clearance": 0.2
+    }
+  },
+  "parts": [
+    {
+      "part": "front-shell",
+      "size_mm": [
+        114,
+        143,
+        58
+      ],
+      "volume_cm3": 54.6,
+      "triangles": 14580,
+      "genus": 2,
+      "status": "NoError"
+    },
+    {
+      "part": "back-plate",
+      "size_mm": [
+        131.7,
+        218.9,
+        5
+      ],
+      "volume_cm3": 83.4,
+      "triangles": 3180,
+      "genus": 3,
+      "status": "NoError"
+    },
+    {
+      "part": "arm-left",
+      "size_mm": [
+        107.2,
+        99.1,
+        5
+      ],
+      "volume_cm3": 18.8,
+      "triangles": 472,
+      "genus": 0,
+      "status": "NoError"
+    },
+    {
+      "part": "arm-right",
+      "size_mm": [
+        103.7,
+        111.7,
+        5
+      ],
+      "volume_cm3": 25.3,
+      "triangles": 640,
+      "genus": 0,
+      "status": "NoError"
+    },
+    {
+      "part": "assembled",
+      "size_mm": [
+        290.6,
+        218.9,
+        63
+      ],
+      "volume_cm3": 182.1,
+      "triangles": 19258,
+      "genus": 16,
+      "status": "NoError"
+    }
+  ]
+}

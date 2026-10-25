@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-jakarta), var(--font-ethiopic), var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+/* `static`: always emit these variables — charts reference them via inline styles. */
+@theme static {
+  --color-night-950: #02040a;
+  --color-night-900: #050a15;
+  --color-night-850: #08101f;
+  --color-night-800: #0b1628;
+  --color-night-700: #12203a;
+  --color-night-600: #1b2c4b;
+
+  --color-mist-50: #f4f8fd;
+  --color-mist-100: #e6eef8;
+  --color-mist-300: #b4c3d8;
+  --color-mist-400: #8a9bb4;
+  --color-mist-500: #64758f;
+
+  --color-glow-200: #b9fbff;
+  --color-glow-300: #7ef4ff;
+  --color-glow-400: #38e1f5;
+  --color-glow-500: #10c3dc;
+  --color-tide-300: #5eead4;
+  --color-tide-400: #2dd4bf;
+  --color-ember-300: #ffb4a2;
+  --color-blush-300: #ff9fb0;
+  --color-amber-300: #fcd38a;
+
+  /* Chart roles (validated dark categorical slots 1–3 on the card surface) */
+  --color-series-1: #3987e5;
+  --color-series-2: #d95926;
+  --color-series-3: #199e70;
+  --color-status-good: #0ca30c;
+  --color-status-warning: #fab219;
+  --color-status-serious: #ec835a;
+  --color-status-critical: #d03b3b;
+  --color-source-patient: #ff9fb0;
+  --color-source-device: #7ef4ff;
+  --color-source-clinician: #5eead4;
+  --color-source-ai: #b3a9ff;
+
+  --ease-cinematic: cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+:root {
+  color-scheme: dark;
+  /* Slightly larger base size: Nouri's audience includes older readers. */
+  font-size: 106.25%;
+  scrollbar-gutter: stable;
+  background: var(--color-night-900);
+}
+
+body {
+  background:
+    radial-gradient(1200px 700px at 78% -10%, rgb(34 211 238 / 0.09), transparent 60%),
+    radial-gradient(900px 600px at -10% 20%, rgb(45 212 191 / 0.06), transparent 60%),
+    var(--color-night-900);
+  color: var(--color-mist-100);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgb(126 244 255 / 0.3);
+  color: white;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-glow-300);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+@utility glass {
+  background: linear-gradient(180deg, rgb(18 32 58 / 0.55), rgb(8 16 31 / 0.55));
+  border: 1px solid rgb(148 197 255 / 0.09);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+@utility text-gradient {
+  background: linear-gradient(100deg, #ffffff 10%, var(--color-glow-200) 45%, var(--color-tide-300) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ───────────── Cinematic intro ───────────── */
+
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  overflow: hidden;
+  transition: opacity 500ms ease;
+}
+
+html[data-intro="play"] .intro-overlay,
+.intro-overlay[data-phase] {
+  display: block;
+}
+
+.intro-backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 45%, #040814 0%, #010208 70%);
+  transition: opacity 900ms var(--ease-cinematic);
+}
+
+.intro-overlay[data-phase="revealing"] .intro-backdrop {
+  opacity: 0;
+}
+
+.intro-overlay[data-phase="revealing"] {
+  pointer-events: none;
+}
+
+.intro-overlay[data-phase="skipping"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-skip {
+  opacity: 0;
+  animation: intro-skip-in 600ms ease 700ms forwards;
+}
+
+.intro-overlay[data-phase] .intro-skip {
+  animation: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+@keyframes intro-skip-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Page content waits in the wings while the intro plays, then glides in. */
+[data-reveal] {
+  transition:
+    opacity 1000ms var(--ease-cinematic),
+    transform 1000ms var(--ease-cinematic),
+    filter 1000ms var(--ease-cinematic);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html[data-intro="play"] [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(6px);
+  transition: none;
+}
+
+/* Scroll-triggered reveals (only hidden when JS is running). */
+html[data-js] [data-scroll-reveal]:not([data-visible]) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+[data-scroll-reveal] {
+  transition:
+    opacity 900ms var(--ease-cinematic),
+    transform 900ms var(--ease-cinematic);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/* Gentle idle float for the hero robot, only once the intro has landed. */
+@keyframes nouri-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+html:not([data-intro="play"]) .nouri-float {
+  animation: nouri-float 6s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
+}
+
+.glow-pulse {
+  animation: glow-pulse 7s ease-in-out infinite;
+}
+
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.flow-dash {
+  stroke-dasharray: 4 8;
+  animation: flow-dash 1.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html:not([data-intro="play"]) .nouri-float {
+    animation: none;
+  }
+}
+
+

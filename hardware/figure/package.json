@@ -1,0 +1,12 @@
+{
+  "name": "nouri-figure",
+  "private": true,
+  "type": "module",
+  "description": "Parametric, print-ready Nouri figure (front shell, back plate, arms).",
+  "scripts": {
+    "build": "node generate.mjs"
+  },
+  "dependencies": {
+    "manifold-3d": "3.5.1"
+  }
+}

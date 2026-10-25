@@ -1,0 +1,323 @@
+{
+  "overall_mm": [
+    146,
+    198,
+    56
+  ],
+  "fitOk": true,
+  "fit": [
+    {
+      "component": "display",
+      "ok": true,
+      "collidesWith": [],
+      "outsideCavity_mm3": 0
+    },
+    {
+      "component": "usb plug",
+      "ok": true,
+      "collidesWith": [],
+      "outsideCavity_mm3": 0
+    },
+    {
+      "component": "camera",
+      "ok": true,
+      "collidesWith": [],
+      "outsideCavity_mm3": 0
+    },
+    {
+      "component": "camera board",
+      "ok": true,
+      "collidesWith": [],
+      "outsideCavity_mm3": 0
+    },
+    {
+      "component": "speaker",
+      "ok": true,
+      "collidesWith": [],
+      "outsideCavity_mm3": 0
+    },
+    {
+      "component": "led",
+      "ok": true,
+      "collidesWith": [],
+      "outsideCavity_mm3": 0
+    },
+    {
+      "component": "battery",
+      "ok": true,
+      "collidesWith": [],
+      "outsideCavity_mm3": 0
+    },
+    {
+      "component": "usb-c port",
+      "ok": true,
+      "collidesWith": [],
+      "outsideCavity_mm3": 0
+    }
+  ],
+  "plates": {
+    "Nouri-FRONT": {
+      "parts": [
+        "front-shell",
+        "visor-bezel",
+        "display-tabs",
+        "antenna"
+      ],
+      "extent_mm": [
+        234,
+        184
+      ],
+      "fits": true,
+      "overlap": false
+    },
+    "Nouri-BACK": {
+      "parts": [
+        "back-shell",
+        "feet",
+        "ear-left",
+        "ear-right"
+      ],
+      "extent_mm": [
+        226,
+        184
+      ],
+      "fits": true,
+      "overlap": false
+    }
+  },
+  "parts": [
+    {
+      "name": "front-shell",
+      "size_mm": [
+        130,
+        178,
+        28
+      ],
+      "volume_cm3": 76.9,
+      "note": "white · face down · no supports"
+    },
+    {
+      "name": "back-shell",
+      "size_mm": [
+        130,
+        178,
+        28
+      ],
+      "volume_cm3": 92.3,
+      "note": "white · back down · no supports"
+    },
+    {
+      "name": "visor-bezel",
+      "size_mm": [
+        113.2,
+        75.2,
+        18.6
+      ],
+      "volume_cm3": 27.3,
+      "note": "black · face down · no supports"
+    },
+    {
+      "name": "display-tabs",
+      "size_mm": [
+        60,
+        43.8,
+        2.5
+      ],
+      "volume_cm3": 0.5,
+      "note": "any · flat (4 tabs)"
+    },
+    {
+      "name": "ear-left",
+      "size_mm": [
+        26,
+        40,
+        10.2
+      ],
+      "volume_cm3": 6.4,
+      "note": "white · outer face down"
+    },
+    {
+      "name": "ear-right",
+      "size_mm": [
+        26,
+        40,
+        10.2
+      ],
+      "volume_cm3": 6.4,
+      "note": "white · outer face down"
+    },
+    {
+      "name": "antenna",
+      "size_mm": [
+        26,
+        12,
+        18
+      ],
+      "volume_cm3": 2.7,
+      "note": "translucent / white · top down"
+    },
+    {
+      "name": "feet",
+      "size_mm": [
+        84,
+        32,
+        19
+      ],
+      "volume_cm3": 17,
+      "note": "white or cyan · flat side down, pegs up"
+    }
+  ],
+  "hardware": {
+    "display": {
+      "mode": "enclosed",
+      "case": {
+        "d": 55,
+        "t": 14.6,
+        "usbZ": 8.5
+      },
+      "enclosedTabAngles": [
+        35,
+        145,
+        215,
+        325
+      ],
+      "glass": 48.08,
+      "tab": [
+        12,
+        1.9
+      ],
+      "active": 45.68,
+      "pcb": 47.86,
+      "stack": 5,
+      "back": 12,
+      "usb": {
+        "w": 9.2,
+        "protrude": 1.83
+      },
+      "usbPlug": [
+        12.5,
+        7,
+        26
+      ],
+      "offsetY": -6,
+      "tabAngles": [
+        180,
+        -44,
+        120
+      ]
+    },
+    "camera": {
+      "module": [
+        8.6,
+        8.6
+      ],
+      "depth": 7,
+      "lens": 7.2,
+      "y": 31,
+      "board": [
+        22,
+        18,
+        16
+      ]
+    },
+    "speaker": {
+      "size": [
+        30,
+        20
+      ],
+      "depth": 5
+    },
+    "led": {
+      "d": 5
+    },
+    "battery": {
+      "size": [
+        62,
+        36,
+        11
+      ]
+    },
+    "usbc": {
+      "slot": [
+        9.6,
+        3.8
+      ],
+      "board": [
+        14,
+        12,
+        10
+      ]
+    },
+    "screws": {
+      "insertHole": 4.2,
+      "insertDepth": 7,
+      "clearance": 3.4,
+      "head": 6.6,
+      "selfTapM2": 1.8
+    }
+  },
+  "shape": {
+    "wall": 2.4,
+    "chamfer": 1.6,
+    "head": {
+      "w": 130,
+      "h": 90,
+      "d": 56,
+      "r": 28
+    },
+    "visor": {
+      "w": 108,
+      "h": 70,
+      "r": 20
+    },
+    "neck": {
+      "w": 60,
+      "h": 6,
+      "d": 48,
+      "r": 3
+    },
+    "body": {
+      "w": 100,
+      "h": 82,
+      "d": 50,
+      "r": 24
+    },
+    "badge": {
+      "size": 36,
+      "r": 9,
+      "y": 47,
+      "groove": 1.2,
+      "depth": 0.8
+    },
+    "label": {
+      "text": "Nouri",
+      "height": 9,
+      "stroke": 1.4,
+      "y": 16
+    },
+    "ear": {
+      "d": 26,
+      "h": 40,
+      "t": 8,
+      "peg": 4,
+      "pegLen": 2.2,
+      "pegOffset": 12,
+      "vent": 2.5
+    },
+    "antenna": {
+      "len": 26,
+      "w": 12,
+      "h": 10,
+      "stem": 6,
+      "stemLen": 8
+    },
+    "foot": {
+      "d": 32,
+      "h": 10,
+      "x": 26,
+      "peg": 8,
+      "pegLen": 9
+    },
+    "fit": 0.3
+  }
+}

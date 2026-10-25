@@ -1,0 +1,12 @@
+{
+  "name": "nouri-robot",
+  "private": true,
+  "type": "module",
+  "description": "Parametric, print-ready Nouri companion robot enclosure sized around its electronics.",
+  "scripts": {
+    "build": "node generate.mjs"
+  },
+  "dependencies": {
+    "manifold-3d": "3.5.1"
+  }
+}
