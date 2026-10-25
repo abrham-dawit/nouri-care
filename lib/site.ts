@@ -6,6 +6,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/patients", label: "Patients", description: "Profiles, journals and visit briefs" },
   { href: "/caregivers", label: "Caregivers", description: "Consented updates for family" },
   { href: "/agents", label: "Agents", description: "The 30-agent control center" },
+  { href: "/simulator", label: "Device sim", description: "Simulated Nouri device (no hardware needed)" },
   { href: "/voice", label: "Voice Studio", description: "Configure how Nouri sounds" },
   { href: "/settings", label: "Settings", description: "Permissions, devices and privacy" },
 ];

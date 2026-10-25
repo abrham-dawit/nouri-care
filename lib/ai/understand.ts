@@ -277,9 +277,14 @@ const norm = (s: string) =>
 const asciiDigits = (s: string) =>
   s.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
 
+/** Small English number words patients (and speech-to-text) often use: "maybe four hours", "two glasses". */
+const NUMBER_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+
 function verify(raw: RawTurn, message: string, turnId: string): { observations: ProposedObservation[]; dropped: string[] } {
   const msg = norm(message);
   const numbers = new Set((asciiDigits(message).match(/\d+(\.\d+)?/g) ?? []).map(Number));
+  // A spelled-out number counts only if that word is actually in what they said.
+  for (const w of msg.match(/[a-z]+/g) ?? []) if (NUMBER_WORDS.includes(w)) numbers.add(NUMBER_WORDS.indexOf(w));
   const observations: ProposedObservation[] = [];
   const dropped: string[] = [];
 

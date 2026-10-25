@@ -33,9 +33,9 @@ export const PUBLIC_PATHS = ["/login", "/signup"];
 
 /** Page sections each role may open (a patient page is also checked against the patient id). */
 const ROLE_PAGES: Record<Role, string[]> = {
-  patient: ["/companion", "/voice", "/settings", "/patients/"],
+  patient: ["/companion", "/simulator", "/voice", "/settings", "/patients/"],
   family: ["/caregivers", "/settings", "/patients/"],
-  clinician: ["/dashboard", "/patients", "/companion", "/caregivers", "/agents", "/voice", "/settings"],
+  clinician: ["/dashboard", "/patients", "/companion", "/simulator", "/caregivers", "/agents", "/voice", "/settings"],
 };
 
 const inSection = (path: string, section: string) => (section.endsWith("/") ? path.startsWith(section) : path === section || path.startsWith(`${section}/`));
@@ -52,6 +52,6 @@ export function canOpenPage(user: SessionUser, path: string): boolean {
 export function navFor(user: SessionUser | null): string[] {
   if (!user) return [];
   if (user.role === "clinician") return user.verified ? ROLE_PAGES.clinician : ["/settings"];
-  if (user.role === "patient") return ["/companion", "/voice", "/settings"];
+  if (user.role === "patient") return ["/companion", "/simulator", "/voice", "/settings"];
   return ["/settings"];
 }
