@@ -5,8 +5,8 @@
 
 Four uAgents that run Nouri Care's work in a fixed order. The **Nouri Coordinator** is registered on
 Agentverse as a mailbox agent and speaks the **Agent Chat Protocol**. Verified: a Chat Protocol message sent through
-Agentverse was delivered, acknowledged and answered. Nouri is listed and discoverable in **ASI:One**; a conversation
-started directly in ASI:One has **not** been verified yet.
+Agentverse was delivered, acknowledged and answered, and a conversation started in **ASI:One** reached the
+Coordinator, ran Safety → route → Planning → Safety, and stored a real reminder (`rem-42a991e5`, 2026-10-25).
 
 | Agent | Address | Role |
 |---|---|---|

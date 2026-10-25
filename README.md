@@ -8,9 +8,9 @@ A gentle AI care companion for older adults living with diabetes, built at Cal H
 the patient says into a reviewable, source-linked visit brief for their care team.
 
 **Verification status:** the web patient workflow and `/simulator` are verified end to end; the Agentverse mailbox
-Agent Chat Protocol exchange is verified and Nouri is discoverable in ASI:One; a conversation started directly in
-ASI:One and the physical robot's live conversation are **not yet verified**; ElevenLabs is supported but not
-configured. Details: [`docs/SUBMISSION.md`](docs/SUBMISSION.md#verification-status-honest).
+Agent Chat Protocol exchange is verified; a conversation started in ASI:One reached nouri-coordinator, ran the full
+workflow and stored a real reminder; the physical robot's live conversation is **not yet verified**; ElevenLabs is
+supported but not configured. Details: [`docs/SUBMISSION.md`](docs/SUBMISSION.md#verification-status-honest).
 
 **Safety first:** Nouri never diagnoses, never decides or repeats medication doses, saves nothing the patient hasn't
 confirmed, and never calls anyone (emergencies get a fixed "call 911" reply). **All patient data is synthetic.**

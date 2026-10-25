@@ -34,8 +34,8 @@ is warm to talk to, and also careful enough to be trusted with health informatio
   Sleep/Meal/Symptom/Glucose → Data Quality → Emergency → Safety → patient confirmation; then Timeline →
   Doctor Report → Clinical Evidence → Safety).
 - **Fetch.ai:** a Coordinator uAgent registered on Agentverse (mailbox, Agent Chat Protocol) runs Safety → routing →
-  Companion or Planning → Safety, with typed messages between four uAgents. It is listed and discoverable in
-  ASI:One.
+  Companion or Planning → Safety, with typed messages between four uAgents. It is discoverable in ASI:One, and a
+  reminder requested from ASI:One was created and stored by Nouri's Planning Agent.
 - **Device API:** an ESP32-S3 sends 16 kHz WAV recordings; the server transcribes them (Whisper locally), runs the
   same conversation pipeline, and returns a 16 kHz WAV reply (Windows voices; ElevenLabs is supported when a key is
   configured).
@@ -51,7 +51,7 @@ The full care loop works in the web app: a patient tells Nouri how they're doing
 and the doctor's dashboard and visit brief update, with every number traceable to the patient's own words.
 
 ### What's next
-Finishing the robot's live conversation loop, verifying conversations started directly in ASI:One, persistent
+Finishing the robot's live conversation loop, persistent
 storage, clinician verification and per-item sharing for family, reminders delivered on the device, and reviewed
 translations of the safety messages.
 
@@ -67,7 +67,7 @@ Next.js, TypeScript, Tailwind CSS, Claude (Anthropic API), Fetch.ai uAgents, Age
 | `/simulator` (labelled simulated device, same backend pipeline) | ✅ Verified |
 | Agentverse mailbox: Agent Chat Protocol message delivered, acknowledged and answered by nouri-coordinator after Safety → Planning → Safety | ✅ Verified (test sender agent, via Agentverse) |
 | Nouri listed on Agentverse and discoverable in ASI:One (agent page, search) | ✅ Verified |
-| A conversation started directly in ASI:One executing nouri-coordinator | ❌ Not verified |
+| A conversation started directly in ASI:One executing nouri-coordinator | ✅ Verified 2026-10-25 08:19 PDT: from ASI:One ("Remind me to drink a glass of water every day" → "8:15 AM every day") the Coordinator ran Safety → route → Planning → Safety and stored reminder `rem-42a991e5` (8:15 AM daily, hydration) in the backend |
 | Physical ESP32 live conversation | ❌ Not verified (pending the hardware team's confirmation) |
 | ElevenLabs voice / speech-to-text | ⚠️ Supported integration; API key not configured |
 
@@ -86,7 +86,7 @@ Next.js, TypeScript, Tailwind CSS, Claude (Anthropic API), Fetch.ai uAgents, Age
 
 ## Known limitations
 - All patients are synthetic; storage is in memory (a server restart clears new entries).
-- Conversations started directly in ASI:One were not verified; the physical robot's live conversation is not yet verified.
+- The physical robot's live conversation is not yet verified.
 - ElevenLabs is supported but not configured; the demo uses local Whisper and Windows voices (about 7–8 s per voice turn).
 - No password reset or clinician-verification workflow; family members see the whole patient page.
 - The device API uses plain HTTP on a local hotspot; venue Wi-Fi interruptions break the AI step (Nouri then says so).
