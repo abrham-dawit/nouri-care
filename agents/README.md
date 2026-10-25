@@ -4,7 +4,9 @@
 # Nouri agents (Fetch.ai uAgents)
 
 Four uAgents that run Nouri Care's work in a fixed order. The **Nouri Coordinator** is registered on
-Agentverse, speaks the **Agent Chat Protocol**, and can be used directly from **ASI:One**.
+Agentverse as a mailbox agent and speaks the **Agent Chat Protocol**. Verified: a Chat Protocol message sent through
+Agentverse was delivered, acknowledged and answered. Nouri is listed and discoverable in **ASI:One**; a conversation
+started directly in ASI:One has **not** been verified yet.
 
 | Agent | Address | Role |
 |---|---|---|

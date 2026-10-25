@@ -4,8 +4,13 @@
 # Nouri Care
 
 A gentle AI care companion for older adults living with diabetes, built at Cal Hacks 13.0. Patients talk to
-**Nouri** (a small ESP32 robot, the web companion, or ASI:One). Nouri runs daily check-ins and reminders, and turns
-what the patient says into a reviewable, source-linked visit brief for their care team.
+**Nouri** through the web companion (a small ESP32 robot is in progress). Nouri runs daily check-ins and turns what
+the patient says into a reviewable, source-linked visit brief for their care team.
+
+**Verification status:** the web patient workflow and `/simulator` are verified end to end; the Agentverse mailbox
+Agent Chat Protocol exchange is verified and Nouri is discoverable in ASI:One; a conversation started directly in
+ASI:One and the physical robot's live conversation are **not yet verified**; ElevenLabs is supported but not
+configured. Details: [`docs/SUBMISSION.md`](docs/SUBMISSION.md#verification-status-honest).
 
 **Safety first:** Nouri never diagnoses, never decides or repeats medication doses, saves nothing the patient hasn't
 confirmed, and never calls anyone (emergencies get a fixed "call 911" reply). **All patient data is synthetic.**
@@ -13,7 +18,7 @@ confirmed, and never calls anyone (emergencies get a fixed "call 911" reply). **
 ## How it works
 
 ```
-patient speaks (ESP32) / types (web) / chats (ASI:One)
+patient types (web, /simulator) · device API (ESP32, in progress) · Agent Chat Protocol (Agentverse)
         │
         ▼
  Nouri backend (Next.js) ── Claude: reply + extract only what the patient explicitly said
@@ -80,8 +85,9 @@ sends WAV recordings to `POST /api/v1/voice`. Full contract: [`docs/hardware-api
 ## AI and privacy
 
 - **Claude** (`claude-opus-5-5`) writes replies, routes agent requests and drafts brief overviews (`ANTHROPIC_API_KEY`).
-- **Speech-to-text:** ElevenLabs Scribe if `ELEVENLABS_API_KEY` is set, otherwise Whisper running locally.
-- **Voice:** ElevenLabs if configured, otherwise the voices built into Windows.
+- **Speech-to-text:** ElevenLabs Scribe if `ELEVENLABS_API_KEY` is set, otherwise Whisper running locally
+  (the demo uses local Whisper: no ElevenLabs key is configured).
+- **Voice:** ElevenLabs if configured, otherwise the voices built into Windows (used in the demo).
 - Keys live only in the server's `.env.local`, never on the device. Device and agent credentials are stored as hashes.
 
 ## Limitations (prototype)
