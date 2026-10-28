@@ -45,10 +45,11 @@ export type Understanding = {
 function systemPrompt(p: PatientContext, language: LanguageChoice) {
   const lang = languageInstruction(language.code, language.region);
   return [
-    `You are Nouri, a warm, patient companion robot for an older adult who likes to be called ${p.preferredName}.`,
+    "You are Nouri, a warm, patient companion robot for an older adult.",
+    "Do not address the person by name or start replies with a name; just talk to them warmly (\"you\").",
     `Always reply in ${lang}, in its usual native script, with simple everyday words suited to an older adult. Put a faithful English translation of your reply in reply_english.`,
     "The patient may write in any language; understand them either way.",
-    `Things ${p.preferredName} has chosen to share with you: ${p.interests.join("; ") || "nothing yet"}.`,
+    `Things they have chosen to share with you: ${p.interests.join("; ") || "nothing yet"}.`,
     "Speak simply and kindly in 1–2 short sentences (your words are read aloud, so keep them brief). Ask at most one gentle follow-up question.",
     "Use the earlier messages for context, answer what they just said, and don't repeat a greeting you already gave.",
     "You are NOT a doctor. Never diagnose. Never give, suggest or change any medication or insulin dose, and never say whether an injection is safe.",
@@ -247,21 +248,20 @@ function mockUnderstand(message: string, p: PatientContext): RawTurn {
   if (mood) obs.push({ ...blank(), kind: "mood", quote: sentenceWith(mood === "low" ? low : good), mood });
 
   // A short, warm reply: acknowledge the most important thing, then (if needed) ask to confirm.
-  const name = p.preferredName;
   const has = (k: RawObservation["kind"]) => obs.find((o) => o.kind === k);
   const opener = has("symptom")
-    ? `Thank you for telling me, ${name}. If it keeps bothering you, it's worth mentioning to your doctor${p.caregiverName ? ` or ${p.caregiverName}` : ""}.`
+    ? `Thank you for telling me. If it keeps bothering you, it's worth mentioning to your doctor${p.caregiverName ? ` or ${p.caregiverName}` : ""}.`
     : mood === "low"
-      ? `I'm here with you, ${name}. Would you like to talk for a little while?`
+      ? "I'm here with you. Would you like to talk for a little while?"
       : has("sleep")?.sleep_quality === "poor"
-        ? `I'm sorry you had a rough night, ${name}. Maybe a gentle rest later today would help.`
+        ? "I'm sorry you had a rough night. Maybe a gentle rest later today would help."
         : has("sleep")
-          ? `I'm glad you got some rest, ${name}.`
+          ? "I'm glad you got some rest."
           : has("glucose")
-            ? `Thanks for reading me your number, ${name}.`
+            ? "Thanks for reading me your number."
             : has("meal")
-              ? `That sounds tasty, ${name}.`
-              : `It's lovely to hear from you, ${name}.${p.interests[0] ? ` I remember you enjoy ${p.interests[0].toLowerCase()}.` : ""} How has your day been?`;
+              ? "That sounds tasty."
+              : "It's lovely to hear from you. How has your day been?";
   const reply = obs.some((o) => o.kind !== "mood") ? `${opener} ${SAVE_QUESTION}` : opener;
 
   // The mock only speaks English; emergency and dosing detection rely on the shared English patterns.
@@ -351,7 +351,7 @@ export async function understand(opts: {
       raw = mockUnderstand(opts.message, opts.patient);
       // Say honestly that the AI couldn't be reached, rather than a canned reply that ignores what they said.
       // The rule-based extraction still runs, so anything they reported can still be confirmed and saved.
-      const apology = `Sorry, ${opts.patient.preferredName}, I'm having trouble connecting right now, so I may not have understood. Could you say that again in a moment?`;
+      const apology = "Sorry, I'm having trouble connecting right now, so I may not have understood. Could you say that again in a moment?";
       raw.reply = raw.reply_english = raw.observations.some((o) => o.kind !== "mood") ? `${apology} ${SAVE_QUESTION}` : apology;
     }
   } else {
@@ -366,7 +366,6 @@ export async function understand(opts: {
 
   // Safety: emergencies and dosing questions always get a fixed reply. Detection combines the English
   // patterns with the model's own flags, since the patterns can't read every language.
-  const name = opts.patient.preferredName;
   const confirmNote = observations.some((o) => o.kind !== "mood") ? ` ${SAVE_QUESTION}` : "";
   let reply = (raw.reply ?? "").trim().slice(0, 900) || "I'm here with you.";
   let replyEnglish = (raw.reply_english ?? "").trim().slice(0, 900) || reply;
@@ -377,9 +376,8 @@ export async function understand(opts: {
   const english: LanguageChoice = { code: "en", region: "US" };
   let replyLanguage: LanguageChoice = replyInEnglishOnly ? english : language;
 
-  const fixed = (kind: "emergency" | "dosing", englishLead: string) => {
-    const base = SAFE_REPLY[kind].en;
-    const englishText = `${englishLead}${base.startsWith("I ") ? base : base[0].toLowerCase() + base.slice(1)}${kind === "dosing" ? confirmNote : ""}`;
+  const fixed = (kind: "emergency" | "dosing") => {
+    const englishText = `${SAFE_REPLY[kind].en}${kind === "dosing" ? confirmNote : ""}`;
     // Fixed messages aren't AI-generated, so the translated one is used even in mock mode.
     const local = SAFE_REPLY[kind][language.code];
     reply = language.code === "en" || !local ? englishText : local;
@@ -387,8 +385,8 @@ export async function understand(opts: {
     replyLanguage = language.code === "en" || !local ? english : language;
     replyReplaced = true;
   };
-  if (emergencyPhrase) fixed("emergency", `${name}, `);
-  else if (dosingQuestion || replyFindings.length) fixed("dosing", `${name}, `);
+  if (emergencyPhrase) fixed("emergency");
+  else if (dosingQuestion || replyFindings.length) fixed("dosing");
   // Always ask before saving, so the question is heard on the device too (not only shown on screen).
   // Mood alone ("it's been amazing") isn't worth interrupting small talk for; it can still be saved on screen.
   if (observations.some((o) => o.kind !== "mood") && !replyReplaced && replyLanguage.code === "en" && !reply.includes(SAVE_QUESTION)) {

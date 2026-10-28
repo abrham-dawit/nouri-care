@@ -6,7 +6,7 @@ import { saveReplyAudio } from "@/lib/devices/audio-store";
 import { allowRequest, authenticateDevice, registryIsEmpty } from "@/lib/devices/registry";
 import { describeObservation } from "@/lib/journal/observations";
 import { recentTurns } from "@/lib/journal/store";
-import { getRecord, DEMO_CLINICIAN } from "@/lib/clinical/synthetic";
+import { DEMO_CLINICIAN } from "@/lib/clinical/synthetic";
 import { confirmTurn, runConversationTurn } from "@/lib/orchestration/conversation";
 import { WorkflowError } from "@/lib/orchestration/runtime";
 import { getPreferences } from "@/lib/voice/store";
@@ -181,8 +181,7 @@ export async function POST(request: Request) {
       if (!(err instanceof WorkflowError)) console.error("Voice confirmation failed:", err instanceof Error ? err.message : "unknown error");
       return fail(err instanceof WorkflowError ? err.status : 500, "confirm_failed", "Nouri couldn't save that answer.");
     }
-    const name = getRecord(device.patientId)?.patient.preferredName ?? "";
-    const reply = saved ? `Saved, ${name}. Your care team will see it in your next visit summary.` : `Okay, ${name}, I won't save it.`;
+    const reply = saved ? "Saved. Your care team will see it in your next visit summary." : "Okay, I won't save it.";
     const id = `voice-${randomUUID()}`;
     const spoken = await speak(id, reply, "en");
     return Response.json({
