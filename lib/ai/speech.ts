@@ -11,7 +11,7 @@ import "server-only";
  * Claude handles the conversation itself (see provider.ts) but has no speech API.
  */
 
-import { encodeWav, pcm16, resample, type WavInfo } from "@/lib/audio/wav";
+import { encodeWav, monoSamples, parseWav, pcm16, resample, trimSilence, type WavInfo } from "@/lib/audio/wav";
 import type { VoicePreferences } from "@/lib/voice/preferences";
 import { elevenLabsConfigured, elevenLabsModel, elevenLabsSttConfigured, elevenLabsSttModel, synthesizeWithElevenLabs, transcribeWithElevenLabs } from "./elevenlabs";
 import { localSttModel, transcribeLocally } from "./local-stt";
@@ -67,9 +67,12 @@ async function post(url: string, init: RequestInit, what: string, service: strin
 }
 
 /** Transcribes a WAV recording. `language` is an ISO-639-1 hint (2 letters) or omitted. */
-export async function transcribe(wav: Buffer, info: WavInfo, language?: string): Promise<{ text: string; provider: SttProvider; model: string }> {
+export async function transcribe(original: Buffer, originalInfo: WavInfo, language?: string): Promise<{ text: string; provider: SttProvider; model: string }> {
   const stt = sttInfo();
   if (!stt) throw new AIProviderError("No speech-to-text service is configured.");
+  // Only the speech goes to speech-to-text: the device records a fixed length, often mostly silence.
+  const wav = encodeWav(trimSilence(monoSamples(original, originalInfo), originalInfo.sampleRate), originalInfo.sampleRate);
+  const info = parseWav(wav);
 
   const local = async () => {
     try {

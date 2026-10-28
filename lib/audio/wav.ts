@@ -111,6 +111,29 @@ export function encodeWav(samples: Int16Array, sampleRate: number, channels = 1)
   return buf;
 }
 
+/**
+ * Cuts the silence before and after speech (20 ms windows, RMS threshold), keeping a little padding.
+ * Devices record a fixed length, so this shortens what speech-to-text has to process.
+ * Returns the input unchanged if no window is above the threshold.
+ */
+export function trimSilence(samples: Int16Array, sampleRate: number, opts: { threshold?: number; padMs?: number } = {}): Int16Array {
+  const win = Math.max(1, Math.round(sampleRate * 0.02));
+  const threshold = (opts.threshold ?? 0.012) * 32768;
+  const pad = Math.round((sampleRate * (opts.padMs ?? 250)) / 1000);
+  const loud = (start: number) => {
+    let sum = 0;
+    const end = Math.min(samples.length, start + win);
+    for (let i = start; i < end; i++) sum += samples[i] * samples[i];
+    return Math.sqrt(sum / Math.max(1, end - start)) > threshold;
+  };
+  let first = -1;
+  for (let s = 0; s < samples.length; s += win) if (loud(s)) { first = s; break; }
+  if (first < 0) return samples;
+  let last = first;
+  for (let s = samples.length - win; s >= first; s -= win) if (loud(Math.max(0, s))) { last = Math.min(samples.length, s + win); break; }
+  return samples.subarray(Math.max(0, first - pad), Math.min(samples.length, last + pad));
+}
+
 /** The first channel of a parsed WAV as 16-bit samples. */
 export function monoSamples(buf: Buffer, info: WavInfo): Int16Array {
   const frame = info.channels * 2;
