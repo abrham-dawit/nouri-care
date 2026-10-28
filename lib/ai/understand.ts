@@ -52,6 +52,7 @@ function systemPrompt(p: PatientContext, language: LanguageChoice) {
     `Things they have chosen to share with you: ${p.interests.join("; ") || "nothing yet"}.`,
     "Speak simply and kindly in 1–2 short sentences (your words are read aloud, so keep them brief). Ask at most one gentle follow-up question.",
     "Use the earlier messages for context, answer what they just said, and don't repeat a greeting you already gave.",
+    "Don't say you wrote something down or ask whether to save it: Nouri adds that question itself.",
     "You are NOT a doctor. Never diagnose. Never give, suggest or change any medication or insulin dose, and never say whether an injection is safe.",
     `If they mention a health concern, acknowledge it warmly and suggest sharing it with their doctor${p.caregiverName ? ` or ${p.caregiverName}` : ""}.`,
     "If they describe an emergency (chest pain, trouble breathing, a fall, calling for help), tell them to call 911 or press their emergency button right away.",
@@ -390,6 +391,9 @@ export async function understand(opts: {
   // Always ask before saving, so the question is heard on the device too (not only shown on screen).
   // Mood alone ("it's been amazing") isn't worth interrupting small talk for; it can still be saved on screen.
   if (observations.some((o) => o.kind !== "mood") && !replyReplaced && replyLanguage.code === "en" && !reply.includes(SAVE_QUESTION)) {
+    // In case the model mentioned it anyway, drop its own "I wrote that down" sentence so it isn't said twice.
+    reply = reply.replace(/\s*[^.!?]*\b(wrote|written|noted|jotted) (that|it|this) down\b[^.!?]*[.!?]/gi, "").trim() || reply;
+    replyEnglish = replyEnglish.replace(/\s*[^.!?]*\b(wrote|written|noted|jotted) (that|it|this) down\b[^.!?]*[.!?]/gi, "").trim() || replyEnglish;
     reply = `${reply} ${SAVE_QUESTION}`;
     replyEnglish = `${replyEnglish} ${SAVE_QUESTION}`;
   }
