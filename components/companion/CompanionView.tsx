@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, Loader2, SendHorizontal, Sparkles, Square, Volume2, X } from "lucide-react";
 import { providerLabel, type AIProvider } from "@/lib/ai/labels";
 import { useMe } from "@/lib/auth/use-me";
-import { getLanguage, LANGUAGES, languageTag, SAMPLE_GREETING } from "@/lib/voice/languages";
+import { getLanguage, LANGUAGES, languageTag, NOURI_INTRO, SAMPLE_GREETING } from "@/lib/voice/languages";
 import { rememberedVoice, speak, stopSpeaking, useVoices, voicesFor } from "@/lib/voice/speech";
 import { useVoicePreferences } from "@/lib/voice/use-preferences";
 import { HeroNouri } from "@/components/nouri/HeroNouri";
@@ -381,7 +381,7 @@ function CompanionChat({ patients }: { patients: PatientOption[] }) {
                   {SAMPLE_GREETING[prefs.language]}
                 </span>
               )}
-              Good afternoon, {patient.preferredName}! How are you feeling today? You can tell me how you slept, what you ate, or anything on your mind.
+              {NOURI_INTRO} How are you feeling today? You can tell me how you slept, what you ate, or anything on your mind.
             </li>
           )}
           {messages.map((m) =>

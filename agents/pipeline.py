@@ -30,7 +30,7 @@ from protocols import (
 
 STEP_TIMEOUT = 60  # seconds; the Companion step waits for Claude
 GREETING = (
-    "Hi, I'm Nouri, a gentle care companion. I can do a daily check-in (tell me how you slept, ate or feel, "
+    "Hi, this is Nouri, your personal health companion. I can do a daily check-in (tell me how you slept, ate or feel, "
     "or a blood sugar reading, and I'll write it down for your care team once you say yes), or set a reminder, "
     "like “remind me to drink water every day at 3pm”. I'm not a doctor and never give medical advice."
 )

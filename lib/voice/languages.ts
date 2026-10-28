@@ -143,9 +143,12 @@ export function languageInstruction(code: string, region: string | null) {
   return r?.dialect ?? (r ? `${lang.name} as spoken in ${r.name}` : lang.name);
 }
 
+/** How Nouri introduces itself when a conversation starts (device wake-up, web companion, ASI:One). */
+export const NOURI_INTRO = "Hi, this is Nouri, your personal health companion.";
+
 /** Preview greetings (not native-speaker reviewed except English). Others fall back to English. */
 export const SAMPLE_GREETING: Record<string, string> = {
-  en: "Hello! I'm Nouri. How are you feeling today?",
+  en: `${NOURI_INTRO} How are you feeling today?`,
   es: "¡Hola! Soy Nouri. ¿Cómo se siente hoy?",
   ar: "مرحبًا! أنا نوري. كيف تشعر اليوم؟",
   am: "ሰላም! እኔ ኑሪ ነኝ። ዛሬ እንዴት ነዎት?",

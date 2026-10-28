@@ -9,6 +9,7 @@ import { recentTurns } from "@/lib/journal/store";
 import { DEMO_CLINICIAN } from "@/lib/clinical/synthetic";
 import { confirmTurn, runConversationTurn } from "@/lib/orchestration/conversation";
 import { WorkflowError } from "@/lib/orchestration/runtime";
+import { NOURI_INTRO } from "@/lib/voice/languages";
 import { getPreferences } from "@/lib/voice/store";
 
 /**
@@ -30,6 +31,8 @@ const SILENCE_RMS = 0.003;
 const WAV_TYPES = new Set(["audio/wav", "audio/x-wav", "audio/wave", "audio/vnd.wave", "application/octet-stream"]);
 const NOT_HEARD = "Sorry, I didn't quite catch that. Could you say it again?";
 const STT_NAME: Record<SttProvider, string> = { openai: "OpenAI", elevenlabs: "ElevenLabs Scribe", groq: "Groq", local: "local Whisper" };
+// No device turn for this long means Nouri was asleep: the next reply starts with its introduction.
+const SESSION_GAP_MS = 10 * 60_000;
 // A spoken answer to "Should I save it?" within a few minutes of the question.
 const CONFIRM_WINDOW_MS = 5 * 60_000;
 const YES = /^\W*(yes|yeah|yep|yup|sure|okay|ok|please|save( it)?|go ahead|correct|that'?s right|right|of course|absolutely)\b/i;
@@ -145,14 +148,19 @@ export async function POST(request: Request) {
     return { audioUrl, tts, ttsMs: Math.round(performance.now() - tTts) };
   };
 
+  // The first turn after a quiet spell (Nouri just woke up) starts with Nouri introducing itself.
+  const lastTurn = recentTurns(device.patientId, 1)[0];
+  const newSession = !lastTurn || Date.now() - Date.parse(lastTurn.receivedAt) > SESSION_GAP_MS;
+
   if (!transcript) {
     const id = `voice-${randomUUID()}`;
-    const spoken = await speak(id, NOT_HEARD, "en");
+    const notHeard = newSession ? `${NOURI_INTRO} ${NOT_HEARD}` : NOT_HEARD;
+    const spoken = await speak(id, notHeard, "en");
     return Response.json({
       interaction_id: id,
       device_id: device.deviceId,
       transcript: "",
-      reply: NOT_HEARD,
+      reply: notHeard,
       reply_language: "en",
       checkin_saved: false,
       confirmation_required: false,
@@ -234,13 +242,15 @@ export async function POST(request: Request) {
     return fail(500, "conversation_failed", "Nouri couldn't process that recording.");
   }
   const convMs = performance.now() - tConv;
-  const { audioUrl, tts, ttsMs } = await speak(turn.id, turn.reply, turn.replyLanguage.code);
+  // Emergency replies always come first, unprefixed; the intro is English, so only for English replies.
+  const reply = newSession && !turn.safety.emergency && turn.replyLanguage.code === "en" ? `${NOURI_INTRO} ${turn.reply}` : turn.reply;
+  const { audioUrl, tts, ttsMs } = await speak(turn.id, reply, turn.replyLanguage.code);
 
   return Response.json({
     interaction_id: turn.id,
     device_id: device.deviceId,
     transcript,
-    reply: turn.reply,
+    reply,
     reply_language: turn.replyLanguage.code,
     // Nothing is saved until the patient confirms; see confirmation_required.
     checkin_saved: false,
